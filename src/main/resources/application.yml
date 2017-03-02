@@ -46,10 +46,13 @@ catalog:
       tags:
         - s3
         - bucket
+      requires:
+        - volume_mount
       service-settings:
         service-type: bucket
         head-type: s3
-        file-system-enabled: false
+        file-accessible: true
+
         access-during-outage: true
       metadata:
         displayName: ecs-bucket
