@@ -12,6 +12,8 @@ import com.sun.jersey.client.urlconnection.URLConnectionClientHandler;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBException;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PipedInputStream;
@@ -45,10 +47,15 @@ public class ServiceInstanceRepository {
 
     public void save(ServiceInstance instance)
             throws IOException, JAXBException {
-        PipedInputStream input = new PipedInputStream();
-        PipedOutputStream output = new PipedOutputStream(input);
+//        PipedInputStream input = new PipedInputStream();
+//        PipedOutputStream output = new PipedOutputStream(input);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
         objectMapper.writeValue(output, instance);
         output.close();
+
+        ByteArrayInputStream input = new ByteArrayInputStream(output.toByteArray());
+
         s3.putObject(bucket, getFilename(instance.getServiceInstanceId()),
                 input, null);
     }
